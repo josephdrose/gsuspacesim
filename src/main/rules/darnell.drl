@@ -1,0 +1,11 @@
+package spacesim
+
+import spacesim.Ship
+
+rule "Start Moving"
+	when
+		s:Ship(speed==0, thrust==false)
+	then 
+		s.thrust=true;
+		update(s);
+end
