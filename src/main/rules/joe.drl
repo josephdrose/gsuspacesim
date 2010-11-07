@@ -4,16 +4,16 @@ import spacesim.Ship
 
 rule "Start Moving"
 	when
-		s:Ship(speed==0, thrust==false)
+		s:Ship(dx==0, forwardThrust==false)
 	then 
-		s.thrust=true;
+		s.forwardThrust=true;
 		update(s);
 end
 
 rule "Kill Throttle At Max Speed"
 	when
-		s:Ship(speed>=10, thrust==true)
+		s:Ship(dx>=10, forwardThrust==true)
 	then
-		s.thrust=false;
+		s.forwardThrust=false;
 		update(s);
 end
