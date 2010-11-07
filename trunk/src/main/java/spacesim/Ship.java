@@ -1,23 +1,41 @@
 package spacesim;
 
 public class Ship {
-	public boolean thrust;
-	public int speed;
+	public boolean forwardThrust, rotateCWThrust, rotateCCWThrust;
+	public int dx, dy, x, y;
+	public float angle;
 	
 	public Ship(){
-		thrust=false;
-		speed=0;
+		forwardThrust=false;
+		rotateCWThrust=false;
+		rotateCCWThrust=false;
+		dx=0;
+		dy=0;
+		x=0;
+		y=0;
+		angle=0;
 	}
 	
 	public void move() {
-		if(thrust){
-			speed+=1;
+		if(forwardThrust){
+			//TODO: base upon angle
+			dx+=1;
+		}
+		if(rotateCWThrust){
+			angle-=1.0;
+		}
+		if(rotateCCWThrust){
+			angle+=1.0;
 		}
 	}
 	
 	//getters, setters required by drools
-	public void setSpeed(int s){speed=s;}
-	public int getSpeed(){return speed;}
-	public void setThrust(boolean t){thrust=t;}
-	public boolean getThrust(){return thrust;}
+	public void setdx(int s){dx=s;}
+	public int getdx(){return dx;}
+	public void setForwardThrust(boolean t){forwardThrust=t;}
+	public boolean getForwardThrust(){return forwardThrust;}
+	public void setRotateCWThrust(boolean t){rotateCWThrust=t;}
+	public boolean getRotateCWThrust(){return rotateCWThrust;}
+	public void setRotateCCWThrust(boolean t){rotateCCWThrust=t;}
+	public boolean getRotateCCWThrust(){return rotateCCWThrust;}
 }

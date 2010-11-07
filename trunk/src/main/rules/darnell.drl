@@ -4,8 +4,8 @@ import spacesim.Ship
 
 rule "Start Moving"
 	when
-		s:Ship(speed==0, thrust==false)
+		s:Ship(dx==0, forwardThrust==false)
 	then 
-		s.thrust=true;
+		s.forwardThrust=true;
 		update(s);
 end
