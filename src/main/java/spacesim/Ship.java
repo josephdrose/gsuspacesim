@@ -5,15 +5,15 @@ public class Ship {
 	public int dx, dy, x, y;
 	public float angle;
 	
-	public Ship(){
+	public Ship(int x, int y, int angle){
 		forwardThrust=false;
 		rotateCWThrust=false;
 		rotateCCWThrust=false;
 		dx=0;
 		dy=0;
-		x=0;
-		y=0;
-		angle=0;
+		this.x=x;
+		this.y=y;
+		this.angle=angle;
 	}
 	
 	public void move() {
@@ -27,6 +27,22 @@ public class Ship {
 		if(rotateCCWThrust){
 			angle+=1.0;
 		}
+	
+		x+=dx;
+		y+=dy;
+	}
+	
+	public double scaleX() {
+		return ((double)x/100000.0);
+	}
+	public int scaleX(int width){
+		return (int)(scaleX()*(double)width);
+	}
+	public double scaleY() {
+		return ((double)y/100000.0);
+	}
+	public int scaleY(int width){
+		return (int)(scaleY()*(double)width);
 	}
 	
 	//getters, setters required by drools
