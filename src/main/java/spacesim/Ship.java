@@ -3,12 +3,10 @@ package spacesim;
 public class Ship {
 	public boolean forwardThrust, rotateCWThrust, rotateCCWThrust;
 	public int dx, dy, x, y;
-	public float angle;
+	public double angle;
 	
 	public Ship(int x, int y, int angle){
 		forwardThrust=false;
-		rotateCWThrust=false;
-		rotateCCWThrust=false;
 		dx=0;
 		dy=0;
 		this.x=x;
@@ -18,16 +16,9 @@ public class Ship {
 	
 	public void move() {
 		if(forwardThrust){
-			//TODO: base upon angle
-			dx+=1;
+			dx+=Math.cos(Math.toRadians(angle));
+			dy+=Math.sin(Math.toRadians(angle));
 		}
-		if(rotateCWThrust){
-			angle-=1.0;
-		}
-		if(rotateCCWThrust){
-			angle+=1.0;
-		}
-	
 		x+=dx;
 		y+=dy;
 	}
@@ -36,22 +27,22 @@ public class Ship {
 		return ((double)x/100000.0);
 	}
 	public int scaleX(int width){
-		return (int)(scaleX()*(double)width);
+		return (int)(scaleX()*(double)width-25);
 	}
 	public double scaleY() {
-		return ((double)y/100000.0);
+		return ((double)(100000.0-y)/100000.0);
 	}
-	public int scaleY(int width){
-		return (int)(scaleY()*(double)width);
+	public int scaleY(int height){
+		return (int)(scaleY()*(double)height-25);
 	}
 	
 	//getters, setters required by drools
-	public void setdx(int s){dx=s;}
-	public int getdx(){return dx;}
 	public void setForwardThrust(boolean t){forwardThrust=t;}
 	public boolean getForwardThrust(){return forwardThrust;}
-	public void setRotateCWThrust(boolean t){rotateCWThrust=t;}
-	public boolean getRotateCWThrust(){return rotateCWThrust;}
-	public void setRotateCCWThrust(boolean t){rotateCCWThrust=t;}
-	public boolean getRotateCCWThrust(){return rotateCCWThrust;}
+	public void setAngle(double a){angle=a;}
+	public double getAngle(){return angle;}
+
+	//read only
+	public double getDx(){return dx;}
+	public double getDy(){return dy;}
 }
