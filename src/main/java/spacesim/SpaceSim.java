@@ -21,19 +21,22 @@ public class SpaceSim extends JPanel {
 	public Exit e;
 	BufferedImage shipimg, missileimg;
 	double shipimg_half, missileimg_half;
+	AffineTransform tf;
 	
-	public static final int screen_width=640, screen_height=640;
+	public static final int screen_width=500, screen_height=522; //offset height 22px for dialog title
 	
-	public void drawImage(Graphics2D g, BufferedImage img, int x, int y, double angle, double half){
-		g.translate(x, y);
-    	g.drawImage(img, AffineTransform.getRotateInstance(Math.toRadians(angle-90.0), half, half), null);
-    	g.translate(-x,-y);
+	public void drawImage(Graphics2D g, BufferedImage img, double x, double y, double angle, double half){
+		AffineTransform t=new AffineTransform();
+		//x and y here are backwards because of the tf angle offset
+		t.translate(y, x);
+		t.rotate(Math.toRadians(180-angle));
+		t.translate(-half, -half);
+		g.drawImage(img, t, null);
 	}
 	
 	public void paint(Graphics graphics) {
 		Graphics2D g = (Graphics2D) graphics;
-    	g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-        RenderingHints.VALUE_ANTIALIAS_ON);
+    	g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     	
     	//clear background
     	g.setColor(Color.gray);
@@ -56,10 +59,15 @@ public class SpaceSim extends JPanel {
     	for(int x=0; x<statuses.length; x++)
     		g.drawString(statuses[x], 0, getHeight()-(offset*statuses.length)+offset*x);
 
+		AffineTransform ot=g.getTransform();
+		g.setTransform(tf);
+		
     	//Draw ships
-    	drawImage(g, shipimg, n.scaleX(screen_width), n.scaleY(screen_height), n.angle, shipimg_half);
-    	drawImage(g, shipimg, s.scaleX(screen_width), s.scaleY(screen_height), s.angle, shipimg_half);
-    }
+    	drawImage(g, shipimg, n.x, n.y, n.angle, shipimg_half);
+    	drawImage(g, shipimg, s.x, s.y, s.angle, shipimg_half);
+    
+    	g.setTransform(ot);
+	}
 	
 	public SpaceSim() throws Exception {
 		//load up the expert systems
@@ -67,8 +75,8 @@ public class SpaceSim extends JPanel {
 		ses = new ExpertSystem("darnell.drl");
 		
 		//opponents North and South		
-		n = new Ship(50000, 100000, 270);
-		s = new Ship(50000, 0, 90);
+		n = new Ship(0, 150, -90);
+		s = new Ship(0, -150, 90);
 
 		//timer
 		t = new Timer();
@@ -83,11 +91,17 @@ public class SpaceSim extends JPanel {
         //set half sizes
         shipimg_half=shipimg.getWidth()/2.0;
         missileimg_half=missileimg.getWidth()/2.0;
+        
+        //set transform to convert from render to real world coordinate system
+        //java renders 0 degrees as "south" instead of "east"
+        tf = new AffineTransform();
+        tf.translate(screen_width/2, screen_height/2);
+        tf.rotate(Math.toRadians(-90));
 	}
 
 	public void start() {
 		//start animation and movement timers
-	    t.schedule(new Tick(), 0, 100);
+	    t.schedule(new Tick(), 0, 10);
 	    t.schedule(new Paint(), 0, 33);
 	}
 	
@@ -130,6 +144,7 @@ public class SpaceSim extends JPanel {
 		JFrame frame = new JFrame("Space Combat Simulator");
 	    s.setBackground(new Color(0, 0, 0));
 	    frame.setSize(screen_width, screen_height);
+	    frame.setResizable(false);
 	    frame.setContentPane(s);
 	    frame.addWindowListener(s.e);
 	    frame.setVisible(true);
