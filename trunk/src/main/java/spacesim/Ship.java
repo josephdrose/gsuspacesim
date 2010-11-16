@@ -2,8 +2,9 @@ package spacesim;
 
 public class Ship {
 	public boolean forwardThrust, rotateCWThrust, rotateCCWThrust;
-	public int dx, dy, x, y;
-	public double angle;
+	public double angle, dx, dy, x, y;
+	
+	public static final double accel=.0001;
 	
 	public Ship(int x, int y, int angle){
 		forwardThrust=false;
@@ -16,24 +17,11 @@ public class Ship {
 	
 	public void move() {
 		if(forwardThrust){
-			dx+=Math.cos(Math.toRadians(angle));
-			dy+=Math.sin(Math.toRadians(angle));
+			dx+=Math.cos(Math.toRadians(angle))*accel;
+			dy+=Math.sin(Math.toRadians(angle))*accel;
 		}
 		x+=dx;
 		y+=dy;
-	}
-	
-	public double scaleX() {
-		return ((double)x/100000.0);
-	}
-	public int scaleX(int width){
-		return (int)(scaleX()*(double)width-25);
-	}
-	public double scaleY() {
-		return ((double)(100000.0-y)/100000.0);
-	}
-	public int scaleY(int height){
-		return (int)(scaleY()*(double)height-25);
 	}
 	
 	//getters, setters required by drools
