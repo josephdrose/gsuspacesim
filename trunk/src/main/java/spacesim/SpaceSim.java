@@ -1,5 +1,6 @@
 package spacesim;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.*;
@@ -17,6 +18,7 @@ public class SpaceSim extends JPanel {
 	private static final long serialVersionUID = 1L;
 	Ship n, s;
 	ExpertSystem nes, ses;
+	ArrayList<Missile> nmissiles, smissiles;
 	Timer t;
 	public Exit e;
 	BufferedImage shipimg, missileimg;
@@ -49,10 +51,12 @@ public class SpaceSim extends JPanel {
             "North Ship Y: "+n.y,
             "North Ship DX: "+n.dx,
             "North Ship DY: "+n.dy,
+            "North Ship ED:"+n.ed,
             "South Ship X: "+s.x,
             "South Ship Y: "+s.y,
             "South Ship DX: "+s.dx,
-            "South Ship DY: "+s.dy
+            "South Ship DY: "+s.dy,
+            "South Ship ED:"+s.ed
     	};
     	
     	int offset=15;
@@ -65,7 +69,18 @@ public class SpaceSim extends JPanel {
     	//Draw ships
     	drawImage(g, shipimg, n.x, n.y, n.angle, shipimg_half);
     	drawImage(g, shipimg, s.x, s.y, s.angle, shipimg_half);
-    
+    	
+    	//Draw missiles
+    	for(int x=0; x<nmissiles.size(); x++){
+    		Missile m=nmissiles.get(x);
+    		drawImage(g, missileimg, m.x, m.y, m.angle, missileimg_half);
+    	}
+    	for(int x=0; x<smissiles.size(); x++){
+    		Missile m=smissiles.get(x);
+    		drawImage(g, missileimg, m.x, m.y, m.angle, missileimg_half);
+    	}
+
+
     	g.setTransform(ot);
 	}
 	
@@ -78,6 +93,14 @@ public class SpaceSim extends JPanel {
 		n = new Ship(0, 150, -90);
 		s = new Ship(0, -150, 90);
 
+		//why can't we all just get along?
+		n.enemyShip=s;
+		s.enemyShip=n;
+		
+		//initialize missile arrays
+		nmissiles=new ArrayList<Missile>();
+		smissiles=new ArrayList<Missile>();
+		
 		//timer
 		t = new Timer();
 		
@@ -86,7 +109,7 @@ public class SpaceSim extends JPanel {
 		
 		//load images
         shipimg=ImageIO.read(new File("ship.png"));
-        missileimg=ImageIO.read(new File("ship.png"));
+        missileimg=ImageIO.read(new File("missile.png"));
         
         //set half sizes
         shipimg_half=shipimg.getWidth()/2.0;
@@ -113,13 +136,29 @@ public class SpaceSim extends JPanel {
 	//called every second
 	public class Tick extends TimerTask {
 		public void run() {
+			//move ships, missiles
+			n.move();
+			s.move();
+			for(int x=0; x<nmissiles.size(); x++)
+				nmissiles.get(x).move();
+			for(int x=0; x<smissiles.size(); x++)
+				smissiles.get(x).move();
+			
 			//update ship status from expert system
 			nes.go(n);
 			ses.go(s);
 			
-			//move ship appropriately
-			n.move();
-			s.move();
+	    	//TODO: Did we request a fired missile?
+			if(n.fireMissile&&n.missiles>0){
+				n.missiles--;
+				System.out.println("firing");
+				Missile m=new Missile(n.x, n.y, n.angle, n.dx, n.dy);
+				nmissiles.add(m);
+			}
+			
+			//TODO: update missiles with expert systems
+			
+			//TODO: detect booms
 		}
 	}
 	

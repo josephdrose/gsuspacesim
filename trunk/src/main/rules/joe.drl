@@ -10,10 +10,10 @@ rule "Start Moving"
 		update(s);
 end
 
-rule "Kill Throttle At Max Speed"
+rule "Fire When Ready Grimley"
 	when
-		s:Ship(dx>=10, forwardThrust==true)
+		s:Ship(ed<100, fireMissile==false)
 	then
-		s.forwardThrust=false;
+		s.fireMissile=true;
 		update(s);
 end
