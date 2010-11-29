@@ -11,19 +11,19 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import javax.imageio.*;
 
-import spacesim.Ship;
-import spacesim.ExpertSystem;
-
 public class SpaceSim extends JPanel {
 	private static final long serialVersionUID = 1L;
+
+	//TODO: These variables could really be named better
 	Ship n, s;
-	ExpertSystem nes, ses;
-	ArrayList<Missile> nmissiles, smissiles;
+	ExpertSystem nes, nmes, ses, smes;
+	Missile nmissile, smissile;
 	Timer t;
 	public Exit e;
 	BufferedImage shipimg, missileimg;
 	double shipimg_half, missileimg_half;
 	AffineTransform tf;
+	ArrayList<Boom> booms;
 	
 	public static final int screen_width=500, screen_height=522; //offset height 22px for dialog title
 	
@@ -71,15 +71,12 @@ public class SpaceSim extends JPanel {
     	drawImage(g, shipimg, s.x, s.y, s.angle, shipimg_half);
     	
     	//Draw missiles
-    	for(int x=0; x<nmissiles.size(); x++){
-    		Missile m=nmissiles.get(x);
-    		drawImage(g, missileimg, m.x, m.y, m.angle, missileimg_half);
+    	if(nmissile!=null) {
+    		drawImage(g, missileimg, nmissile.x, nmissile.y, nmissile.angle, missileimg_half);
     	}
-    	for(int x=0; x<smissiles.size(); x++){
-    		Missile m=smissiles.get(x);
-    		drawImage(g, missileimg, m.x, m.y, m.angle, missileimg_half);
-    	}
-
+		if(smissile!=null) {
+			drawImage(g, missileimg, smissile.x, smissile.y, smissile.angle, missileimg_half);
+		}
 
     	g.setTransform(ot);
 	}
@@ -87,7 +84,9 @@ public class SpaceSim extends JPanel {
 	public SpaceSim() throws Exception {
 		//load up the expert systems
 		nes = new ExpertSystem("joe.drl");
+		nmes = new ExpertSystem("joe_missile.drl");
 		ses = new ExpertSystem("darnell.drl");
+		smes = new ExpertSystem("darnell_missile.drl");
 		
 		//opponents North and South		
 		n = new Ship(0, 150, -90);
@@ -96,10 +95,7 @@ public class SpaceSim extends JPanel {
 		//why can't we all just get along?
 		n.enemyShip=s;
 		s.enemyShip=n;
-		
-		//initialize missile arrays
-		nmissiles=new ArrayList<Missile>();
-		smissiles=new ArrayList<Missile>();
+		booms=new ArrayList<Boom>();
 		
 		//timer
 		t = new Timer();
@@ -136,29 +132,35 @@ public class SpaceSim extends JPanel {
 	//called every second
 	public class Tick extends TimerTask {
 		public void run() {
-			//move ships, missiles
+			//move ships
 			n.move();
 			s.move();
-			for(int x=0; x<nmissiles.size(); x++)
-				nmissiles.get(x).move();
-			for(int x=0; x<smissiles.size(); x++)
-				smissiles.get(x).move();
 			
 			//update ship status from expert system
 			nes.go(n);
 			ses.go(s);
 			
-	    	//TODO: Did we request a fired missile?
-			if(n.fireMissile&&n.missiles>0){
-				n.missiles--;
-				System.out.println("firing");
-				Missile m=new Missile(n.x, n.y, n.angle, n.dx, n.dy);
-				nmissiles.add(m);
+			//move missiles, update with expert systems
+			if(nmissile!=null){
+				nmissile.move();
+				nmes.go(nmissile);
+			}
+			if(smissile!=null){
+				smissile.move();
+				smes.go(smissile);
 			}
 			
-			//TODO: update missiles with expert systems
+	    	//Did we request a fired missile?
+			if(n.fireMissile&&n.missiles>0){
+				n.missiles--;
+				nmissile=new Missile(n.x, n.y, n.angle, n.dx, n.dy);
+			}
+			if(s.fireMissile&&s.missiles>0){
+				s.missiles--;
+				smissile=new Missile(s.x, s.y, s.angle, s.dx, s.dy);
+			}
 			
-			//TODO: detect booms
+			//TODO: detect booms; set missiles to null and draw red circles
 		}
 	}
 	

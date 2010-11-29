@@ -1,0 +1,11 @@
+package spacesim
+
+import spacesim.Missile
+
+rule "Detonate"
+	when
+		m:Missile(fuel<10, boom==false)
+	then 
+		m.boom=true;
+		update(m);
+end

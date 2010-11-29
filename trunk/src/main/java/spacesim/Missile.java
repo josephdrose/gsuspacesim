@@ -1,7 +1,6 @@
 package spacesim;
 
 public class Missile extends Rocket {
-	public static double mass=10;
 	public int fuel;
 	public boolean boom;
 	public double explosionRadius=100;
@@ -20,4 +19,11 @@ public class Missile extends Rocket {
 		if(fuel<=0)
 			boom=true;
 	}
+
+	//getters, setters required by drools
+	public boolean getBoom(){return boom;}
+	public void setBoom(boolean b){boom=b;}
+	
+	//read only
+	public int getFuel(){return fuel;}
 }
