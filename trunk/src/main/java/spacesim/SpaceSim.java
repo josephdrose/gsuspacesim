@@ -78,6 +78,18 @@ public class SpaceSim extends JPanel {
 			drawImage(g, missileimg, smissile.x, smissile.y, smissile.angle, missileimg_half);
 		}
 
+		//draw booms
+		g.setColor(Color.red);
+		for(int x=0; x<booms.size(); x++) {
+			Boom b=booms.get(x);
+			g.drawOval((int)b.x, (int)b.y, (int)b.r, (int)b.r);
+			b.r-=.1;
+			if(b.r<=0) {
+				booms.remove(x);
+			}
+		}
+			
+		
     	g.setTransform(ot);
 	}
 	
@@ -176,7 +188,7 @@ public class SpaceSim extends JPanel {
 				}
 			}
 			
-			//TODO: Draw booms
+			//TODO: Detect booms colliding with ships, missiles
 		}
 	}
 	
