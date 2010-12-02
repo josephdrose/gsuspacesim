@@ -4,7 +4,7 @@ import spacesim.Missile
 
 rule "Detonate"
 	when
-		m:Missile(fuel<10, boom==false)
+		m:Missile(ed<explosionRadius, boom==false)
 	then 
 		m.boom=true;
 		update(m);

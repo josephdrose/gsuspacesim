@@ -9,3 +9,11 @@ rule "Start Moving"
 		s.forwardThrust=true;
 		update(s);
 end
+
+rule "Fire When Ready Grimley"
+	when
+		s:Ship(ed<100, fireMissile==false)
+	then
+		s.fireMissile=true;
+		update(s);
+end
