@@ -144,23 +144,39 @@ public class SpaceSim extends JPanel {
 			if(nmissile!=null){
 				nmissile.move();
 				nmes.go(nmissile);
+				if(nmissile.boom) {
+					booms.add(new Boom(nmissile.x, nmissile.y, nmissile.explosionRadius));
+					nmissile=null;
+				}
 			}
 			if(smissile!=null){
 				smissile.move();
 				smes.go(smissile);
+				if(smissile.boom) {
+					booms.add(new Boom(smissile.x, smissile.y, smissile.explosionRadius));
+					smissile=null;
+				}
 			}
 			
 	    	//Did we request a fired missile?
 			if(n.fireMissile&&n.missiles>0){
 				n.missiles--;
 				nmissile=new Missile(n.x, n.y, n.angle, n.dx, n.dy);
+				nmissile.enemyShip=s;
+				if(smissile!=null) {
+					nmissile.enemyMissile=smissile;
+				}
 			}
 			if(s.fireMissile&&s.missiles>0){
 				s.missiles--;
 				smissile=new Missile(s.x, s.y, s.angle, s.dx, s.dy);
+				smissile.enemyShip=n;
+				if(nmissile!=null) {
+					smissile.enemyMissile=nmissile;
+				}
 			}
 			
-			//TODO: detect booms; set missiles to null and draw red circles
+			//TODO: Draw booms
 		}
 	}
 	

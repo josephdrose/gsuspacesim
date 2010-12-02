@@ -18,11 +18,7 @@ public abstract class Rocket {
 		this.y=y;
 		this.angle=angle;
 	}
-	
-	public double distance(Rocket a, Rocket b) {
-		return Math.sqrt((a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y));
-	}
-	
+		
 	public double relativeAngle(Rocket a, Rocket b) {
 		
 		return 0;
@@ -37,11 +33,11 @@ public abstract class Rocket {
 		y+=dy;
 		
 		if(enemyShip!=null){
-			ed=distance(this, enemyShip);
+			ed=Util.distance(x, y, enemyShip.x, enemyShip.y);
 			ea=relativeAngle(this, enemyShip);
 		}
 		if(enemyMissile!=null){
-			emd=distance(this, enemyMissile);
+			emd=Util.distance(x, y, enemyMissile.x, enemyMissile.y);
 			ema=relativeAngle(this, enemyMissile);
 		}
 	}
@@ -51,7 +47,7 @@ public abstract class Rocket {
 	public boolean getForwardThrust(){return forwardThrust;}
 	public void setAngle(double a){angle=a;}
 	public double getAngle(){return angle;}
-
+	
 	//read only
 	public double getDx(){return dx;}
 	public double getDy(){return dy;}
