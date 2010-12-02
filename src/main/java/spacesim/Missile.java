@@ -3,10 +3,10 @@ package spacesim;
 public class Missile extends Rocket {
 	public int fuel;
 	public boolean boom;
-	public double explosionRadius=100;
+	public double explosionRadius=10;
 	public Missile(double x, double y, double angle, double dx, double dy) {
 		super(x, y, angle);
-		fuel=1000;
+		fuel=1000000;
 		boom=false;
 		this.dx=dx;
 		this.dy=dy;
@@ -26,4 +26,5 @@ public class Missile extends Rocket {
 	
 	//read only
 	public int getFuel(){return fuel;}
+	public double getExplosionRadius(){return explosionRadius;}
 }
