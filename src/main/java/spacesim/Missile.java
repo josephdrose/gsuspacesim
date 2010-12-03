@@ -5,17 +5,32 @@ public class Missile extends Rocket {
 	public boolean boom;
 	public double explosionRadius=10;
 
-	public Missile(double x, double y, double angle, double dx, double dy) {
-		super(x, y, angle);
+	public Missile() {
+		super(0, 0, 0);
 		fuel=1000;
 		boom=false;
+		forwardThrust=false;
+		accel=.001;
+		alive=false;
+	}
+	
+	public void fire(double x, double y, double angle, double dx, double dy) {
+		this.x=x;
+		this.y=y;
+		this.angle=angle;
 		this.dx=dx;
 		this.dy=dy;
+		alive=true;
 		forwardThrust=true;
-		accel=.001;
 	}
+	
 	public void move() {
 		super.move();
+		
+		if(!alive) {
+			return;
+		}
+		
 		fuel--;
 		
 		if(fuel<=0)
@@ -23,10 +38,20 @@ public class Missile extends Rocket {
 	}
 
 	//getters, setters required by drools
-	public boolean getBoom(){return boom;}
-	public void setBoom(boolean b){boom=b;}
+	public boolean getBoom() {
+		return boom;
+	}
+	
+	public void setBoom(boolean b) {
+		boom=b;
+	}
 	
 	//read only
-	public int getFuel(){return fuel;}
-	public double getExplosionRadius(){return explosionRadius;}
+	public int getFuel() {
+		return fuel;
+	}
+	
+	public double getExplosionRadius() {
+		return explosionRadius;
+	}
 }

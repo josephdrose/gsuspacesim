@@ -11,6 +11,16 @@ public class Ship extends Rocket {
 	}
 	
 	//getters, setters required by drools
-	public boolean getFireMissile(){return fireMissile;}
-	public void setFireMissile(boolean fm){fireMissile=fm;}
+	public boolean getFireMissile() {
+		return fireMissile;
+	}
+	
+	public void setFireMissile(boolean fm) {
+		fireMissile=fm;
+	}
+	
+	//read only
+	public int getMissiles() {
+		return missiles;
+	}
 }

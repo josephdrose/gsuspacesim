@@ -8,15 +8,11 @@ import org.drools.builder.KnowledgeBuilderErrors;
 import org.drools.builder.KnowledgeBuilderFactory;
 import org.drools.builder.ResourceType;
 import org.drools.io.ResourceFactory;
-import org.drools.logger.KnowledgeRuntimeLogger;
-import org.drools.logger.KnowledgeRuntimeLoggerFactory;
-import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.StatelessKnowledgeSession;
 
 public class ExpertSystem {
 	private KnowledgeBase kbase;
 	private StatelessKnowledgeSession ksession;
-	//private KnowledgeRuntimeLogger logger; 
 	
 	public ExpertSystem(String filename) throws Exception{
 		KnowledgeBuilder kbuilder=KnowledgeBuilderFactory.newKnowledgeBuilder();
@@ -31,7 +27,6 @@ public class ExpertSystem {
 		kbase=KnowledgeBaseFactory.newKnowledgeBase();
 		kbase.addKnowledgePackages(kbuilder.getKnowledgePackages());
 		ksession=kbase.newStatelessKnowledgeSession();
-		//logger=KnowledgeRuntimeLoggerFactory.newFileLogger(ksession, filename);
 	}
 	
 	public void go(Object o){
@@ -39,6 +34,5 @@ public class ExpertSystem {
 	}
 
 	public void end(){
-		//logger.close();
 	}
 }
