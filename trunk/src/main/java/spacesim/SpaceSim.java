@@ -141,7 +141,7 @@ public class SpaceSim extends JPanel {
 		e=new Exit();
 		
 		//load images
-        shipimg=new ImageIcon("ship.png").getImage();
+        shipimg=new ImageIcon("ship.gif").getImage();
         missileimg=new ImageIcon("missile.gif").getImage();
         starfield=new ImageIcon("starfield.jpg").getImage();
         
