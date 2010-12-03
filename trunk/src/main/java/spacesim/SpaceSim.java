@@ -47,8 +47,8 @@ public class SpaceSim extends JPanel {
     	
     	//draw status text
     	g.setColor(Color.black);
-    	ArrayList<String> statuses=new ArrayList();
-    	if(n!=null) {
+    	ArrayList<String> statuses=new ArrayList<String>();
+    	if(n.alive) {
     		String [] nstatus={
 	            "North Ship X: "+n.x, 
 	            "North Ship Y: "+n.y,
@@ -58,7 +58,7 @@ public class SpaceSim extends JPanel {
 			};
     		statuses.addAll(Arrays.asList(nstatus));
     	}
-    	if(s!=null) {
+    	if(s.alive) {
     		String [] sstatus={
 				"South Ship X: "+s.x,
 	            "South Ship Y: "+s.y,
@@ -77,18 +77,18 @@ public class SpaceSim extends JPanel {
 		g.setTransform(tf);
 		
     	//Draw ships
-    	if(n!=null) {
+    	if(n.alive) {
     		drawImage(g, shipimg, n.x, n.y, n.angle, shipimg_half);
     	}
-    	if(s!=null) {
+    	if(s.alive) {
     		drawImage(g, shipimg, s.x, s.y, s.angle, shipimg_half);
     	}
     	
     	//Draw missiles
-    	if(nmissile!=null) {
+    	if(nmissile.alive) {
     		drawImage(g, missileimg, nmissile.x, nmissile.y, nmissile.angle, missileimg_half);
     	}
-		if(smissile!=null) {
+		if(smissile.alive) {
 			drawImage(g, missileimg, smissile.x, smissile.y, smissile.angle, missileimg_half);
 		}
 
@@ -96,7 +96,8 @@ public class SpaceSim extends JPanel {
 		g.setColor(Color.red);
 		for(int x=0; x<booms.size(); x++) {
 			Boom b=booms.get(x);
-			g.fillOval((int)b.x, (int)b.y, (int)b.r, (int)b.r);
+			//x and y here are backwards because of the tf angle offset
+			g.fillOval((int)b.y, (int)b.x, (int)b.r, (int)b.r);
 			b.r-=.1;
 			if(b.r<=0) {
 				booms.remove(x);
@@ -116,10 +117,18 @@ public class SpaceSim extends JPanel {
 		//opponents North and South		
 		n = new Ship(0, 150, -90);
 		s = new Ship(0, -150, 90);
-
+		nmissile=new Missile();
+		smissile=new Missile();
+		
 		//why can't we all just get along?
 		n.enemyShip=s;
+		n.enemyMissile=smissile;
+		nmissile.enemyShip=s;
+		nmissile.enemyMissile=smissile;
 		s.enemyShip=n;
+		s.enemyMissile=nmissile;
+		smissile.enemyShip=n;
+		smissile.enemyMissile=nmissile;
 		booms=new ArrayList<Boom>();
 		
 		//timer
@@ -158,71 +167,59 @@ public class SpaceSim extends JPanel {
 	public class Tick extends TimerTask {
 		public void run() {
 			//move ships
-			if(n!=null) {
-				n.move();
-			}
-			if(s!=null) {
-			 s.move();
-			}
+			n.move();
+			s.move();
 			
 			//update ship status from expert system
-			if(n!=null) {
+			if(n.alive) {
 				nes.go(n);
 			}
-			if(s!=null) {
+			if(s.alive) {
 				ses.go(s);
 			}
 			
 			//move missiles, update with expert systems
-			if(nmissile!=null){
+			if(nmissile.alive) {
 				nmissile.move();
 				nmes.go(nmissile);
 				if(nmissile.boom) {
 					booms.add(new Boom(nmissile.x, nmissile.y, nmissile.explosionRadius));
-					nmissile=null;
+					nmissile.alive=false;
 				}
 			}
-			if(smissile!=null){
+			if(smissile.alive){
 				smissile.move();
 				smes.go(smissile);
 				if(smissile.boom) {
 					booms.add(new Boom(smissile.x, smissile.y, smissile.explosionRadius));
-					smissile=null;
+					smissile.alive=false;
 				}
 			}
 			
 	    	//Did we request a fired missile?
-			if(n!=null&&n.fireMissile&&n.missiles>0){
+			if(n.fireMissile&&n.missiles>0){
 				n.missiles--;
-				nmissile=new Missile(n.x, n.y, n.angle, n.dx, n.dy);
-				nmissile.enemyShip=s;
-				if(smissile!=null) {
-					nmissile.enemyMissile=smissile;
-				}
+				nmissile.fire(n.x, n.y, n.angle, n.dx, n.dy);
 			}
-			if(s!=null&&s.fireMissile&&s.missiles>0){
+			if(s.fireMissile&&s.missiles>0){
 				s.missiles--;
-				smissile=new Missile(s.x, s.y, s.angle, s.dx, s.dy);
-				smissile.enemyShip=n;
-				if(nmissile!=null) {
-					smissile.enemyMissile=nmissile;
-				}
+				smissile.fire(s.x, s.y, s.angle, s.dx, s.dy);
 			}
 			
 			//Detect booms colliding with ships, missiles
 			for(int x=0; x<booms.size(); x++) {
 				Boom b=booms.get(x);
-				if(n!=null&&Util.distance(b.x, b.y, n.y, n.y)<b.r) {
-					n=null;
+				if(Util.distance(b.x, b.y, n.x, n.y)<b.r) {
+					n.alive=false;
 				}
-				if(s!=null&&Util.distance(b.x, b.y, s.y, s.y)<b.r) {
-					s=null;
+				if(Util.distance(b.x, b.y, s.x, s.y)<b.r) {
+					s.alive=false;
 				}
-				if(nmissile!=null&&Util.distance(b.x, b.y, nmissile.y, nmissile.y)<b.r) {
-					nmissile=null;
+				if(Util.distance(b.x, b.y, nmissile.x, nmissile.y)<b.r) {
+					nmissile.alive=false;
 				}
-				if(smissile!=null&&Util.distance(b.x, b.y, smissile.y, smissile.y)<b.r) {
-					smissile=null;
+				if(Util.distance(b.x, b.y, smissile.x, smissile.y)<b.r) {
+					smissile.alive=false;
 				}
 			}
 		}

@@ -2,7 +2,7 @@ package spacesim
 
 import spacesim.Ship
 
-rule "Start Moving"
+rule "Start"
 	when
 		s:Ship(dx==0, forwardThrust==false)
 	then 
@@ -10,10 +10,28 @@ rule "Start Moving"
 		update(s);
 end
 
-rule "Fire When Ready Grimley"
+rule "Fire"
 	when
 		s:Ship(ed<100, fireMissile==false)
 	then
 		s.fireMissile=true;
+		update(s);
+end
+
+rule "Chase"
+	no-loop
+	when 
+		s:Ship(fireMissile==false)
+	then
+		s.angle=s.ea;
+		update(s);
+end
+
+rule "Run"
+	no-loop
+	when
+		s:Ship(missiles==0)
+	then
+		s.angle=s.ea-180;
 		update(s);
 end

@@ -1,19 +1,22 @@
 package spacesim
 
 import spacesim.Missile
+import spacesim.Util
 
 rule "Detonate"
 	when
-		m:Missile(ed<explosionRadius, boom==false)
+		m:Missile(eval(ed<explosionRadius-5), boom==false)
 	then 
 		m.boom=true;
 		update(m);
 end
 
-rule "Follow"
+rule "Follow To Ship's Future Path"
+	no-loop
 	when
-		m:Missile(angle!=ea)
+		m:Missile(boom==false)
 	then
-		m.angle=m.ea;
+		m.angle=Util.angle(m.x, m.y, (m.enemyShip.dx-m.dx)*5*m.ed+m.enemyShip.x, 
+			(m.enemyShip.dy-m.dy)*5*m.ed+m.enemyShip.y);
 		update(m);
 end

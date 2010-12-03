@@ -10,7 +10,7 @@ rule "Detonate"
 		update(m);
 end
 
-rule "Follow"
+rule "Follow By Aiming Straight At Target"
 	when
 		m:Missile(angle!=ea)
 	then
