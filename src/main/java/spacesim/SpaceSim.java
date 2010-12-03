@@ -24,7 +24,7 @@ public class SpaceSim extends JPanel {
 	AffineTransform tf;
 	ArrayList<Boom> booms;
 	
-	public static final int screen_width=500, screen_height=522; //offset height 22px for dialog title
+	public static final int screen_width=1000, screen_height=1022; //offset height 22px for dialog title
 	
 	public void drawImage(Graphics2D g, Image img, double x, double y, double angle, double half){
 		AffineTransform t=new AffineTransform();
@@ -45,7 +45,7 @@ public class SpaceSim extends JPanel {
     	g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     	
     	//clear background
-    	g.drawImage(starfield, 0, 0, 500, 500, this);
+    	g.drawImage(starfield, 0, 0, 1000, 1000, this);
     	
     	//draw status text
     	g.setColor(Color.white);
@@ -118,8 +118,9 @@ public class SpaceSim extends JPanel {
 		
 		//opponents North and South		
 		Random g=new Random();
-		n = new Ship(g.nextInt(400)-200, g.nextInt(400)-200, g.nextInt(359));
-		s = new Ship(g.nextInt(400)-200, g.nextInt(400)-200, g.nextInt(359));
+		int arena=screen_width-100;
+		n = new Ship(g.nextInt(arena)-arena/2, g.nextInt(arena)-arena/2, g.nextInt(359));
+		s = new Ship(g.nextInt(arena)-arena/2, g.nextInt(arena)-arena/2, g.nextInt(359));
 		nmissile=new Missile();
 		smissile=new Missile();
 		
