@@ -19,7 +19,7 @@ public class SpaceSim extends JPanel {
 	Missile nmissile, smissile;
 	Timer t;
 	public Exit e;
-	Image shipimg, missileimg, starfield;
+	Image nshipimg, sshipimg, missileimg, starfield;
 	double shipimg_half, missileimg_half;
 	AffineTransform tf;
 	ArrayList<Boom> booms;
@@ -80,10 +80,10 @@ public class SpaceSim extends JPanel {
 		
     	//Draw ships
     	if(n.alive) {
-    		drawImage(g, shipimg, n.x, n.y, n.angle, shipimg_half);
+    		drawImage(g, nshipimg, n.x, n.y, n.angle, shipimg_half);
     	}
     	if(s.alive) {
-    		drawImage(g, shipimg, s.x, s.y, s.angle, shipimg_half);
+    		drawImage(g, sshipimg, s.x, s.y, s.angle, shipimg_half);
     	}
     	
     	//Draw missiles
@@ -141,12 +141,13 @@ public class SpaceSim extends JPanel {
 		e=new Exit();
 		
 		//load images
-        shipimg=new ImageIcon("ship.gif").getImage();
+        nshipimg=new ImageIcon("ship.gif").getImage();
+        sshipimg=new ImageIcon("ship_red.gif").getImage();
         missileimg=new ImageIcon("missile.gif").getImage();
         starfield=new ImageIcon("starfield.jpg").getImage();
         
         //set half sizes
-        shipimg_half=shipimg.getWidth(this)/2.0;
+        shipimg_half=nshipimg.getWidth(this)/2.0;
         missileimg_half=missileimg.getWidth(this)/2.0;
         
         //set transform to convert from render to real world coordinate system
