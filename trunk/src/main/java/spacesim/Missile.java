@@ -10,7 +10,7 @@ public class Missile extends Rocket {
 		fuel=1000;
 		boom=false;
 		forwardThrust=false;
-		accel=.001;
+		accel=.003;
 		alive=false;
 	}
 	

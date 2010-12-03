@@ -7,7 +7,7 @@ public class Ship extends Rocket {
 		super(x, y, angle);
 		missiles=1;
 		fireMissile=false;
-		accel=.0001;
+		accel=.0003;
 	}
 	
 	//getters, setters required by drools
