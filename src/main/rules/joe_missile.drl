@@ -16,7 +16,7 @@ rule "Follow To Ship's Future Path"
 	when
 		m:Missile(boom==false)
 	then
-		m.angle=Util.angle(m.x, m.y, (m.enemyShip.dx-m.dx)*5*m.ed+m.enemyShip.x, 
-			(m.enemyShip.dy-m.dy)*5*m.ed+m.enemyShip.y);
+		m.angle=Util.angle(m.x, m.y, (m.enemyShip.dx-m.dx)*3*m.ed+m.enemyShip.x, 
+			(m.enemyShip.dy-m.dy)*3*m.ed+m.enemyShip.y);
 		update(m);
 end
