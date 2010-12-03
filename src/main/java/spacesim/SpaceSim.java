@@ -9,9 +9,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import javax.imageio.*;
 
 public class SpaceSim extends JPanel {
 	private static final long serialVersionUID = 1L;
