@@ -2,9 +2,7 @@ package spacesim;
 
 public abstract class Rocket {
 	public boolean forwardThrust, rotateCWThrust, rotateCCWThrust;
-	public double angle, dx, dy, x, y, ed, ea, ema, emd;
-	
-	public static final double accel=.0001;
+	public double angle, dx, dy, x, y, ed, ea, ema, emd, accel;
 	
 	public static double mass=0;
 	
@@ -34,11 +32,11 @@ public abstract class Rocket {
 		
 		if(enemyShip!=null){
 			ed=Util.distance(x, y, enemyShip.x, enemyShip.y);
-			ea=relativeAngle(this, enemyShip);
+			ea=Util.angle(x, y, enemyShip.x, enemyShip.y);
 		}
 		if(enemyMissile!=null){
 			emd=Util.distance(x, y, enemyMissile.x, enemyMissile.y);
-			ema=relativeAngle(this, enemyMissile);
+			ema=Util.angle(x, y, enemyMissile.x, enemyMissile.y);
 		}
 	}
 	
@@ -52,4 +50,5 @@ public abstract class Rocket {
 	public double getDx(){return dx;}
 	public double getDy(){return dy;}
 	public double getEd(){return ed;}
+	public double getEa(){return ea;}
 }

@@ -1,6 +1,7 @@
 package spacesim;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.*;
@@ -46,29 +47,42 @@ public class SpaceSim extends JPanel {
     	
     	//draw status text
     	g.setColor(Color.black);
-    	String [] statuses={
-            "North Ship X: "+n.x, 
-            "North Ship Y: "+n.y,
-            "North Ship DX: "+n.dx,
-            "North Ship DY: "+n.dy,
-            "North Ship ED:"+n.ed,
-            "South Ship X: "+s.x,
-            "South Ship Y: "+s.y,
-            "South Ship DX: "+s.dx,
-            "South Ship DY: "+s.dy,
-            "South Ship ED:"+s.ed
-    	};
-    	
+    	ArrayList<String> statuses=new ArrayList();
+    	if(n!=null) {
+    		String [] nstatus={
+	            "North Ship X: "+n.x, 
+	            "North Ship Y: "+n.y,
+	            "North Ship DX: "+n.dx,
+	            "North Ship DY: "+n.dy,
+	            "North Ship ED:"+n.ed
+			};
+    		statuses.addAll(Arrays.asList(nstatus));
+    	}
+    	if(s!=null) {
+    		String [] sstatus={
+				"South Ship X: "+s.x,
+	            "South Ship Y: "+s.y,
+	            "South Ship DX: "+s.dx,
+	            "South Ship DY: "+s.dy,
+	            "South Ship ED:"+s.ed
+    		};
+    		statuses.addAll(Arrays.asList(sstatus));
+    	}    	
     	int offset=15;
-    	for(int x=0; x<statuses.length; x++)
-    		g.drawString(statuses[x], 0, getHeight()-(offset*statuses.length)+offset*x);
-
+    	for(int x=0; x<statuses.size(); x++) {
+    		g.drawString(statuses.get(x), 0, getHeight()-(offset*statuses.size())+offset*x);
+    	}
+    		
 		AffineTransform ot=g.getTransform();
 		g.setTransform(tf);
 		
     	//Draw ships
-    	drawImage(g, shipimg, n.x, n.y, n.angle, shipimg_half);
-    	drawImage(g, shipimg, s.x, s.y, s.angle, shipimg_half);
+    	if(n!=null) {
+    		drawImage(g, shipimg, n.x, n.y, n.angle, shipimg_half);
+    	}
+    	if(s!=null) {
+    		drawImage(g, shipimg, s.x, s.y, s.angle, shipimg_half);
+    	}
     	
     	//Draw missiles
     	if(nmissile!=null) {
@@ -82,14 +96,13 @@ public class SpaceSim extends JPanel {
 		g.setColor(Color.red);
 		for(int x=0; x<booms.size(); x++) {
 			Boom b=booms.get(x);
-			g.drawOval((int)b.x, (int)b.y, (int)b.r, (int)b.r);
+			g.fillOval((int)b.x, (int)b.y, (int)b.r, (int)b.r);
 			b.r-=.1;
 			if(b.r<=0) {
 				booms.remove(x);
 			}
 		}
-			
-		
+
     	g.setTransform(ot);
 	}
 	
@@ -145,12 +158,20 @@ public class SpaceSim extends JPanel {
 	public class Tick extends TimerTask {
 		public void run() {
 			//move ships
-			n.move();
-			s.move();
+			if(n!=null) {
+				n.move();
+			}
+			if(s!=null) {
+			 s.move();
+			}
 			
 			//update ship status from expert system
-			nes.go(n);
-			ses.go(s);
+			if(n!=null) {
+				nes.go(n);
+			}
+			if(s!=null) {
+				ses.go(s);
+			}
 			
 			//move missiles, update with expert systems
 			if(nmissile!=null){
@@ -171,7 +192,7 @@ public class SpaceSim extends JPanel {
 			}
 			
 	    	//Did we request a fired missile?
-			if(n.fireMissile&&n.missiles>0){
+			if(n!=null&&n.fireMissile&&n.missiles>0){
 				n.missiles--;
 				nmissile=new Missile(n.x, n.y, n.angle, n.dx, n.dy);
 				nmissile.enemyShip=s;
@@ -179,7 +200,7 @@ public class SpaceSim extends JPanel {
 					nmissile.enemyMissile=smissile;
 				}
 			}
-			if(s.fireMissile&&s.missiles>0){
+			if(s!=null&&s.fireMissile&&s.missiles>0){
 				s.missiles--;
 				smissile=new Missile(s.x, s.y, s.angle, s.dx, s.dy);
 				smissile.enemyShip=n;
@@ -188,7 +209,22 @@ public class SpaceSim extends JPanel {
 				}
 			}
 			
-			//TODO: Detect booms colliding with ships, missiles
+			//Detect booms colliding with ships, missiles
+			for(int x=0; x<booms.size(); x++) {
+				Boom b=booms.get(x);
+				if(n!=null&&Util.distance(b.x, b.y, n.y, n.y)<b.r) {
+					n=null;
+				}
+				if(s!=null&&Util.distance(b.x, b.y, s.y, s.y)<b.r) {
+					s=null;
+				}
+				if(nmissile!=null&&Util.distance(b.x, b.y, nmissile.y, nmissile.y)<b.r) {
+					nmissile=null;
+				}
+				if(smissile!=null&&Util.distance(b.x, b.y, smissile.y, smissile.y)<b.r) {
+					smissile=null;
+				}
+			}
 		}
 	}
 	
