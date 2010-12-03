@@ -45,7 +45,7 @@ public class SpaceSim extends JPanel {
     	g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     	
     	//clear background
-    	g.drawImage(starfield, 0, 0, 1000, 1000, this);
+    	g.drawImage(starfield, 0, 0, screen_width, screen_width, this);
     	
     	//draw status text
     	g.setColor(Color.white);
