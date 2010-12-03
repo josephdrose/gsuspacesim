@@ -9,3 +9,11 @@ rule "Detonate"
 		m.boom=true;
 		update(m);
 end
+
+rule "Follow"
+	when
+		m:Missile(angle!=ea)
+	then
+		m.angle=m.ea;
+		update(m);
+end
