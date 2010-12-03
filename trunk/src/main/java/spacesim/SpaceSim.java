@@ -35,7 +35,7 @@ public class SpaceSim extends JPanel {
 		t.translate(y, x);
 		t.rotate(Math.toRadians(180-angle));
 		t.translate(-half, -half);
-		g.drawImage(img, t, null);
+		g.drawImage(img, t, this);
 	}
 	
 	public boolean imageUpdate(Image img, int flags, int x, int y, int w, int h) {
@@ -144,10 +144,9 @@ public class SpaceSim extends JPanel {
 		e=new Exit();
 		
 		//load images
-        shipimg=ImageIO.read(new File("ship.png"));
-        missileimg=ImageIO.read(new File("missile.png"));
-        starfield=ImageIO.read(new File("starfield.jpg"));
-        //starfield=new ImageIcon("test.gif").getImage();
+        shipimg=new ImageIcon("ship.png").getImage();
+        missileimg=new ImageIcon("missile.gif").getImage();
+        starfield=new ImageIcon("starfield.jpg").getImage();
         
         //set half sizes
         shipimg_half=shipimg.getWidth(this)/2.0;
