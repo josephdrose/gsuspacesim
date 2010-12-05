@@ -10,10 +10,22 @@ rule "Detonate"
 		update(m);
 end
 
-rule "Follow By Aiming Straight At Target"
+/* rule "Follow By Aiming Straight At Target"
 	when
 		m:Missile(angle!=ea)
 	then
 		m.angle=m.ea;
 		update(m);
 end
+*/
+//boom==false
+rule "Shoot Down Other Missile"
+	no-loop
+	when
+		m:Missile(boom==false)
+	then
+		m.angle=m.ema;
+		//m.angle=Util.angle(m.x, m.y, (m.enemyMissile.dx-m.dx)*3*m.ed+m.enemyMissile.x, 
+		//	(m.enemyMissile.dy-m.dy)*3*m.ed+m.enemyMissile.y);
+		update(m);
+	end
