@@ -109,6 +109,10 @@ public abstract class Rocket {
 		return eda;
 	}
 	
+	public double getEmd() {
+		return emd;
+	}
+	
 	public double getEmda() {
 		return emda;
 	}
