@@ -8,7 +8,7 @@ rule "Start Moving"
 		s:Ship(forwardThrust==false, enemyShip!=null)
 	then 
 		s.forwardThrust=true;
-		s.angle=s.ea+25;
+		s.angle=s.ea;
 		update(s);
 end
 
@@ -22,12 +22,12 @@ end
 
 rule "Fire"
 	when
-		s:Ship(ed<200, fireMissile==false)
+		s:Ship(ed<100, fireMissile==false)
 	then
 		s.fireMissile=true;
 		update(s);
 end
-
+/*
 rule "Evasive Maneuvers"
 	no-loop
 	when
@@ -36,6 +36,7 @@ rule "Evasive Maneuvers"
 		s.angle=s.ema-180;
 		update(s);
 end
+*/
 
 rule "You have won or draw"
 	no-loop
