@@ -54,3 +54,5 @@ Draw (Both Alive)
 Draw (Both Alive)
 Draw (Both Alive)
 }}}
+
+The trials were very interesting.  In the beginning, the north ship won all battles that started at long distance.  Short range battles saw both ships destroyed.  Both ships began firing at greater ranges;  round 2 saw the north ship firing from farther away than the south ship.  Round 3 and 4 saw adaptations in dodging technique from the north ship and tracking and range changes from the south ship.  In round 5, the south ship began targeting the north ship's missile; the technique was very effective, as it left both ships without missiles.
