@@ -8,25 +8,19 @@ rule "Start Moving"
 		s:Ship(forwardThrust==false, enemyShip!=null)
 	then 
 		s.forwardThrust=true;
-		s.angle=s.ea;
+		s.angle=s.ea-20;
 		update(s);
 end
 
-rule "Sling Shot Fire"
-	when
-		s:Ship((ed<600 && ed<200), fireMissile==false)
-	then
-		s.fireMissile=true;
-		update(s);
-end
 
 rule "Fire"
 	when
-		s:Ship(ed<100, fireMissile==false)
+		s:Ship(ed<300, fireMissile==false)
 	then
 		s.fireMissile=true;
 		update(s);
 end
+
 /*
 rule "Evasive Maneuvers"
 	no-loop
