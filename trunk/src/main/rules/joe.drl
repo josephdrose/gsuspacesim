@@ -51,18 +51,36 @@ end
 
 rule "You May Fire When Ready Grimley"
 	when
-		s:Ship(ed<200, fireMissile==false, missiles>0)
+		s:Ship(ed<250, fireMissile==false, missiles>0)
 	then
 		s.fireMissile=true;
 		update(s);
 end
 
-rule "Avoid Missiles"
+rule "Avoid Missiles when far"
 	no-loop
 	when
-		s:Ship(enemyMissile.alive==true)
+		s:Ship(enemyMissile.alive==true, enemyMissile.ed>100)
 	then
 		s.angle=s.ema+115;
+		update(s);
+end
+
+rule "Avoid Missiles when close"
+	no-loop
+	when
+		s:Ship(enemyMissile.alive==true, enemyMissile.ed<=100, eval(Math.abs((s.enemyMissile.angle+115)-(180-enemyMissile.ea))>180))
+	then
+		s.angle=s.enemyMissile.angle+115;
+		update(s);
+end
+
+rule "Avoid Missiles when close (part 2)"
+	no-loop
+	when
+		s:Ship(enemyMissile.alive==true, enemyMissile.ed<=100, eval(Math.abs((s.enemyMissile.angle+115)-(180-enemyMissile.ea))<=180))
+	then
+		s.angle=s.enemyMissile.angle-115;
 		update(s);
 end
 
