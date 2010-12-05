@@ -9,14 +9,23 @@ rule "Start Moving"
 	then 
 		s.forwardThrust=true;
 		//offset from the enemy ship; we don't want to take a missile head-on
-		s.angle=s.ea-25;
+		s.angle=s.ea;
 		update(s);
 end
 
-rule "Continue Offset, But Close"
+rule "Close, enemy is offset"
 	no-loop
 	when
-		s:Ship(enemyMissile.alive==false, enemyShip.missiles>0, missiles>0)
+		s:Ship(enemyMissile.alive==false, enemyShip.missiles>0, missiles>0, eval(Math.abs(enemyShip.angle-enemyShip.ea)>20))
+	then
+		s.angle=s.ea;
+		update(s);
+end
+
+rule "Close, enemy is not offset"
+	no-loop
+	when
+		s:Ship(enemyMissile.alive==false, enemyShip.missiles>0, missiles>0, eval(Math.abs(enemyShip.angle-enemyShip.ea)<=20))
 	then
 		s.angle=s.ea-25;
 		update(s);
@@ -53,7 +62,7 @@ rule "Avoid Missiles"
 	when
 		s:Ship(enemyMissile.alive==true)
 	then
-		s.angle=s.ema-135;
+		s.angle=s.ema+115;
 		update(s);
 end
 
