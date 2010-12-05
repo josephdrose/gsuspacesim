@@ -5,7 +5,8 @@ import spacesim.Util
 
 rule "Detonate"
 	when
-		m:Missile(eval(ed<explosionRadius-5), boom==false)
+		//we want fuel to be less than 900 so we don't blow ourselves up
+		m:Missile(ed<explosionRadius, boom==false, fuel<900)
 	then 
 		m.boom=true;
 		update(m);
@@ -16,7 +17,8 @@ rule "Follow To Ship's Future Path"
 	when
 		m:Missile(boom==false)
 	then
-		m.angle=Util.angle(m.x, m.y, (m.enemyShip.dx-m.dx)*3*m.ed+m.enemyShip.x, 
-			(m.enemyShip.dy-m.dy)*3*m.ed+m.enemyShip.y);
+		//calculate where the ship will be and aim at that
+		m.angle=Util.angle(m.x, m.y, (m.enemyShip.dx-m.dx)*1.5*m.ed+m.enemyShip.x, 
+			(m.enemyShip.dy-m.dy)*1.5*m.ed+m.enemyShip.y);
 		update(m);
 end
