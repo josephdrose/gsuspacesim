@@ -8,14 +8,14 @@ rule "Start Moving"
 		s:Ship(forwardThrust==false, enemyShip!=null)
 	then 
 		s.forwardThrust=true;
-		s.angle=s.ea-20;
+		s.angle=s.ea+180;
 		update(s);
 end
 
 
 rule "Fire"
 	when
-		s:Ship(ed<300, fireMissile==false)
+		s:Ship(fireMissile==false)
 	then
 		s.fireMissile=true;
 		update(s);

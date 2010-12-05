@@ -19,7 +19,16 @@ rule "Follow By Aiming Straight At Target"
 		update(m);
 end
 
+rule "Slowdown before target"
+no-loop
+when
+	m:Missile(ed == 200)
+then
+	m.angle=m.ea+10;
+	update(m);
+end
 //boom==false
+/*
 rule "Shoot Down Other Missile"
 	no-loop
 	when
@@ -28,11 +37,11 @@ rule "Shoot Down Other Missile"
 		m.angle=m.ema;
 		update(m);
 	end
-
+*/
 rule "Shoot Down Other Ship"
 	no-loop
 	when
-		m:Missile(boom==false, enemyMissile.alive==false, enemyMissile.ed<200)
+		m:Missile(boom==false)
 	then
 		m.angle=m.ea;
 		update(m);
