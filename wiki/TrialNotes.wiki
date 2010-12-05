@@ -1,0 +1,12 @@
+#summary Notes on trials
+
+= Introduction =
+
+The following details how the trials were completed.
+
+
+= Details =
+
+For the beginning of the project, code was written on my laptop and both participants saw each others rules and the impacts of rule changes on the simulation.  The starting points of the ships were fixed, so some of the rules assumed as such.  Once the code was in a stable enough state that only changes to the rules needed to be made, the participants began making changes separately without being able to look at each others rules.
+
+A series of trials was run; each time, participants were given a period of time between trials to modify rules in an attempt to best the opponent.  Each trial consisted of 5 simulations.
