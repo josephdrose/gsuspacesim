@@ -20,3 +20,7 @@ Ship: Inherits Rocket.  Keeps track of amount of missiles (right now, we limit t
 Util: Contains utility methods for use elsewhere in the program.
 
 SpaceSim: Entry point of the program.  Contains all initialization code and gui code.
+
+joe.drl, darnell.drl: Rules for the ships.  Joe is the north ship and Darnell is the south ship.  The designations came from when the ships started at fixed positions; now, the north ship is green and the south ship is red, but they can start in any position.
+
+joe_missile.drl, darnell_missile.drl: Rules for the missiles.
