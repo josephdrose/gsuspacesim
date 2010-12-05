@@ -59,7 +59,7 @@ end
 
 rule "Return fire"
 	when
-		s:Ship(enemyMissile.alive==true, fireMissile==false, missiles>0)
+		s:Ship(enemyMissile.alive==true, ed<650, fireMissile==false, missiles>0)
 	then
 		s.fireMissile=true;
 		update(s);
