@@ -27,7 +27,7 @@ rule "Missile Away, Run"
 	when
 		s:Ship(enemyMissile.alive==false, enemyShip.alive==true, missiles==0)
 	then
-		s.angle=s.ea-180;
+		s.angle=s.ea-90;
 		update(s);
 end
 
