@@ -51,7 +51,15 @@ end
 
 rule "You May Fire When Ready Grimley"
 	when
-		s:Ship(ed<250, fireMissile==false, missiles>0)
+		s:Ship(ed<310, fireMissile==false, missiles>0)
+	then
+		s.fireMissile=true;
+		update(s);
+end
+
+rule "Return fire"
+	when
+		s:Ship(enemyMissile.alive==true, fireMissile==false, missiles>0)
 	then
 		s.fireMissile=true;
 		update(s);
