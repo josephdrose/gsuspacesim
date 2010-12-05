@@ -4,7 +4,7 @@ import spacesim.Missile
 
 rule "Detonate"
 	when
-		m:Missile(ed<explosionRadius, boom==false)
+		m:Missile(eval(ed<explosionRadius-2), boom==false)
 	then 
 		m.boom=true;
 		update(m);
@@ -25,8 +25,6 @@ rule "Shoot Down Other Missile"
 		m:Missile(boom==false, enemyMissile.alive==true)
 	then
 		m.angle=m.ema;
-		//m.angle=Util.angle(m.x, m.y, (m.enemyMissile.dx-m.dx)*3*m.ed+m.enemyMissile.x, 
-		//	(m.enemyMissile.dy-m.dy)*3*m.ed+m.enemyMissile.y);
 		update(m);
 	end
 
@@ -36,7 +34,5 @@ rule "Shoot Down Other Ship"
 		m:Missile(boom==false, enemyMissile.alive==false, enemyMissile.ed<200)
 	then
 		m.angle=m.ea;
-		//m.angle=Util.angle(m.x, m.y, (m.enemyMissile.dx-m.dx)*3*m.ed+m.enemyMissile.x, 
-		//	(m.enemyMissile.dy-m.dy)*3*m.ed+m.enemyMissile.y);
 		update(m);
 	end
