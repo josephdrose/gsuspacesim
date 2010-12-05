@@ -22,7 +22,7 @@ end
 rule "Shoot Down Other Missile"
 	no-loop
 	when
-		m:Missile(boom==false)
+		m:Missile(boom==false, enemyMissile.alive==true)
 	then
 		m.angle=m.ema;
 		//m.angle=Util.angle(m.x, m.y, (m.enemyMissile.dx-m.dx)*3*m.ed+m.enemyMissile.x, 
