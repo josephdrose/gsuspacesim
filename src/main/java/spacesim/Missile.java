@@ -7,7 +7,7 @@ public class Missile extends Rocket {
 
 	public Missile() {
 		super(0, 0, 0);
-		fuel=1000;
+		fuel=500;
 		boom=false;
 		forwardThrust=false;
 		accel=.003;

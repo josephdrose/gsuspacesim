@@ -12,8 +12,8 @@ import java.awt.geom.AffineTransform;
 
 public class SpaceSim extends JPanel {
 	private static final long serialVersionUID = 1L;
-
-	//TODO: These variables could really be named better
+	private static final boolean simulate=true;
+	
 	Ship n, s;
 	ExpertSystem nes, nmes, ses, smes;
 	Missile nmissile, smissile;
@@ -23,8 +23,9 @@ public class SpaceSim extends JPanel {
 	double shipimg_half, missileimg_half;
 	AffineTransform tf;
 	ArrayList<Boom> booms;
+	int ticks=0;
 	
-	public static final int screen_width=1000, screen_height=1022; //offset height 22px for dialog title
+	public static final int screen_width=600, screen_height=600; //offset height 22px for dialog title
 	
 	public void drawImage(Graphics2D g, Image img, double x, double y, double angle, double half){
 		AffineTransform t=new AffineTransform();
@@ -106,7 +107,7 @@ public class SpaceSim extends JPanel {
 			}
 		}
 
-    	g.setTransform(ot);
+    	g.setTransform(ot);    	
 	}
 	
 	public SpaceSim() throws Exception {
@@ -164,6 +165,12 @@ public class SpaceSim extends JPanel {
 	    t.schedule(new Paint(), 0, 33);
 	}
 	
+	public void simulate() {
+		Tick t=new Tick();
+		while(true)
+			t.run();
+	}
+	
 	public void stop() {
 		nes.end();
 		ses.end();		
@@ -172,6 +179,9 @@ public class SpaceSim extends JPanel {
 	//called every second
 	public class Tick extends TimerTask {
 		public void run() {
+			if(ticks%100==0)
+				System.out.println("Tick "+ticks);
+			
 			//move ships
 			n.move();
 			s.move();
@@ -228,6 +238,25 @@ public class SpaceSim extends JPanel {
 					smissile.alive=false;
 				}
 			}
+			
+			//check for exit conditions, draw
+			if((ticks>2000)||SpaceSim.simulate&&((n.alive==false&&s.alive==false)||(n.alive==true&&s.alive==true&&
+					nmissile.alive==false&&smissile.alive==false&&n.missiles==0&&s.missiles==0))){
+				System.out.println("Draw");
+				System.exit(0);
+			}
+			//north victory
+			if(n.alive==true&&smissile.alive==false&&s.alive==false&&s.missiles==0){
+				System.out.println("North Wins");
+				System.exit(0);
+			}
+			//south victory
+			if(s.alive==true&&nmissile.alive==false&&n.alive==false&&n.missiles==0){
+				System.out.println("South Wins");
+				System.exit(0);
+			}
+			
+	    	ticks++;
 		}
 	}
 	
@@ -248,16 +277,22 @@ public class SpaceSim extends JPanel {
 		//create simulator
 		SpaceSim s = new SpaceSim();
 
-		//set up gui
-		JFrame frame = new JFrame("Space Combat Simulator");
-	    s.setBackground(new Color(0, 0, 0));
-	    frame.setSize(screen_width, screen_height);
-	    frame.setResizable(false);
-	    frame.setContentPane(s);
-	    frame.addWindowListener(s.e);
-	    frame.setVisible(true);
-	    
-	    //start simulator
-	    s.start();
+		if(SpaceSim.simulate){
+		    //start simulator in simulation mode
+		    s.simulate();			
+		}
+		else {
+			//set up gui
+			JFrame frame = new JFrame("Space Combat Simulator");
+		    s.setBackground(new Color(0, 0, 0));
+		    frame.setSize(screen_width, screen_height);
+		    frame.setResizable(false);
+		    frame.setContentPane(s);
+		    frame.addWindowListener(s.e);
+		    frame.setVisible(true);
+		    
+		    //start simulator in real-time mode
+		    s.start();
+		}
 	}
 }
