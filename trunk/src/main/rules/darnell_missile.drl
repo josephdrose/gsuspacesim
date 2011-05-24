@@ -10,6 +10,7 @@ rule "Detonate"
 		update(m);
 end
 
+/*
 rule "Detonate if Close to Missile"
 	when
 		m:Missile(eval(emd<explosionRadius-1), boom==false)
@@ -17,6 +18,7 @@ rule "Detonate if Close to Missile"
 		m.boom=true;
 		update(m);
 end
+//*/
 
 rule "Follow By Aiming Straight At Target"
 	no-loop

@@ -6,7 +6,7 @@ import spacesim.Util
 rule "Detonate"
 	when
 		//we want fuel to be less than 900 so we don't blow ourselves up
-		m:Missile(ed<explosionRadius, boom==false, fuel<900)
+		m:Missile(ed<explosionRadius, boom==false, fuel<450)
 	then 
 		m.boom=true;
 		update(m);
