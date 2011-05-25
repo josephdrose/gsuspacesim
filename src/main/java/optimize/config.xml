@@ -5,6 +5,7 @@
 		<scoreDefinitionType>SIMPLE</scoreDefinitionType> 
 	</scoreDefinition> 
 	<termination>
+		<terminationCompositionStyle>OR</terminationCompositionStyle>
 		<scoreAttained>0</scoreAttained> 
 		<maximumStepCount>100</maximumStepCount>
 	</termination> 
