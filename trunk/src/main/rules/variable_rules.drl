@@ -1,13 +1,15 @@
-import org.drools.planner.core.score.calculator.SimpleScoreCalculator;
 import org.drools.planner.core.score.constraint.UnweightedConstraintOccurrence;
 
 import optimize.Variable;
+import optimize.SimulationScoreCalculator;
 
-global SimpleScoreCalculator scoreCalculator;
+global SimulationScoreCalculator scoreCalculator;
+
+/*
 
 rule "noNegatives" 
     when
-		$v : Variable(value>0);
+		$v : Variable(value<0);
 	then
 		insertLogical(new UnweightedConstraintOccurrence("negativeValue", $v));
 end
@@ -19,5 +21,14 @@ rule "constraintsBroken"
 			count($unweightedConstraintOccurrence)
 		); 
 	then
-	scoreCalculator.setScore(- $occurrenceCount.intValue());
+		scoreCalculator.setScore(-$occurrenceCount.intValue());
+end
+
+*/
+
+rule "runSimulation"
+	when 
+		$v : Variable();
+	then
+		scoreCalculator.simulate($v);
 end
