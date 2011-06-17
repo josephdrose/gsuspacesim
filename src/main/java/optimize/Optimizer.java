@@ -5,6 +5,9 @@ import org.drools.planner.core.Solver;
 import org.drools.planner.core.localsearch.DefaultLocalSearchSolver;
 
 public class Optimizer {
+	public static final int RUNS_PER_SCORE=3;
+	public static final int STEP=25;
+	
 	public static void main(String [] args) {
 		XmlSolverConfigurer configurer = new XmlSolverConfigurer(); 
 		configurer.configure("/optimize/config.xml"); 

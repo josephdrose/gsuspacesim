@@ -5,18 +5,18 @@
 		<scoreDefinitionType>SIMPLE</scoreDefinitionType> 
 	</scoreDefinition> 
 	<termination>
-		<terminationCompositionStyle>OR</terminationCompositionStyle>
-		<scoreAttained>0</scoreAttained> 
-		<maximumStepCount>100</maximumStepCount>
+		<maximumStepCount>3</maximumStepCount>
 	</termination> 
 	<selector>
 		<moveFactoryClass>optimize.VariableMoveFactory</moveFactoryClass>
 	</selector>
 	<acceptor> 
 		<completeSolutionTabuSize>1000</completeSolutionTabuSize>
+		<completeMoveTabuSize>40</completeMoveTabuSize>
+		<completeUndoMoveTabuSize>40</completeUndoMoveTabuSize>
 	</acceptor>
 	<forager>
 		<pickEarlyType>NEVER</pickEarlyType> 
 	</forager>
-	<environmentMode>DEBUG</environmentMode>
+	<environmentMode>REPRODUCIBLE</environmentMode>
 </localSearchSolver>
