@@ -5,27 +5,6 @@ import optimize.SimulationScoreCalculator;
 
 global SimulationScoreCalculator scoreCalculator;
 
-/*
-
-rule "noNegatives" 
-    when
-		$v : Variable(value<0);
-	then
-		insertLogical(new UnweightedConstraintOccurrence("negativeValue", $v));
-end
-
-rule "constraintsBroken" 
-	when
-		$occurrenceCount : Number() from accumulate( 
-			$unweightedConstraintOccurrence : UnweightedConstraintOccurrence(), 
-			count($unweightedConstraintOccurrence)
-		); 
-	then
-		scoreCalculator.setScore(-$occurrenceCount.intValue());
-end
-
-*/
-
 rule "runSimulation"
 	when 
 		$v : Variable();

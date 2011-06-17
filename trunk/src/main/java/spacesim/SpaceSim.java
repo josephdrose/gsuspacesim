@@ -14,6 +14,17 @@ public class SpaceSim extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private static final boolean simulate=true;
 	
+	public static final int NORTH_WIN=0;
+	public static final int SOUTH_WIN=1;
+	public static final int DRAW=2;
+	public static final int UNDECIDED=3;
+	
+	//tunables
+	public static int FIRE_DISTANCE=310;
+	public static int ENEMY_OFFSET=20;
+	public static int RETURN_FIRE_DISTANCE=650;
+	public static int MISSILE_AVOID_THRESHOLD=100;
+	
 	Ship n, s;
 	ExpertSystem nes, nmes, ses, smes;
 	Missile nmissile, smissile;
@@ -165,15 +176,98 @@ public class SpaceSim extends JPanel {
 	    t.schedule(new Paint(), 0, 33);
 	}
 	
-	public void simulate() {
-		Tick t=new Tick();
-		while(true)
-			t.run();
+	public int simulate(int fire_distance) {
+		//TODO: Set fire distance, have rules pull it;
+		
+		int r = UNDECIDED;
+		while(r==UNDECIDED)
+			r=tick();
+		
+		return r;
 	}
 	
 	public void stop() {
 		nes.end();
 		ses.end();		
+	}
+	
+	public int tick () {
+		//move ships
+		n.move();
+		s.move();
+		
+		//update ship status from expert system
+		if(n.alive) {
+			nes.go(n);
+		}
+		if(s.alive) {
+			ses.go(s);
+		}
+		
+		//move missiles, update with expert systems
+		if(nmissile.alive) {
+			nmissile.move();
+			nmes.go(nmissile);
+			if(nmissile.boom) {
+				booms.add(new Boom(nmissile.x, nmissile.y, nmissile.explosionRadius));
+				nmissile.alive=false;
+			}
+		}
+		if(smissile.alive){
+			smissile.move();
+			smes.go(smissile);
+			if(smissile.boom) {
+				booms.add(new Boom(smissile.x, smissile.y, smissile.explosionRadius));
+				smissile.alive=false;
+			}
+		}
+		
+    	//Did we request a fired missile?
+		if(n.fireMissile&&n.missiles>0){
+			n.missiles--;
+			nmissile.fire(n.x, n.y, n.angle, n.dx, n.dy);
+		}
+		if(s.fireMissile&&s.missiles>0){
+			s.missiles--;
+			smissile.fire(s.x, s.y, s.angle, s.dx, s.dy);
+		}
+		
+		//Detect booms colliding with ships, missiles
+		for(int x=0; x<booms.size(); x++) {
+			Boom b=booms.get(x);
+			if(Util.distance(b.x, b.y, n.x, n.y)<b.r) {
+				n.alive=false;
+			}
+			if(Util.distance(b.x, b.y, s.x, s.y)<b.r) {
+				s.alive=false;
+			}
+			if(Util.distance(b.x, b.y, nmissile.x, nmissile.y)<b.r) {
+				nmissile.alive=false;
+			}
+			if(Util.distance(b.x, b.y, smissile.x, smissile.y)<b.r) {
+				smissile.alive=false;
+			}
+		}
+		
+		//check for exit conditions, draw
+		if((ticks>2000)||SpaceSim.simulate&&((n.alive==false&&s.alive==false)||(n.alive==true&&s.alive==true&&
+				nmissile.alive==false&&smissile.alive==false&&n.missiles==0&&s.missiles==0))){
+			return DRAW;
+		}
+		//north victory
+		if(n.alive==true&&smissile.alive==false&&s.alive==false&&s.missiles==0){
+			
+			return NORTH_WIN;
+		}
+		//south victory
+		if(s.alive==true&&nmissile.alive==false&&n.alive==false&&n.missiles==0){
+			System.out.println("South Wins");
+			return SOUTH_WIN;
+		}
+		
+    	ticks++;
+    	
+    	return UNDECIDED;
 	}
 	
 	//called every second
@@ -182,81 +276,20 @@ public class SpaceSim extends JPanel {
 			if(ticks%100==0)
 				System.out.println("Tick "+ticks);
 			
-			//move ships
-			n.move();
-			s.move();
+			int r = tick();
 			
-			//update ship status from expert system
-			if(n.alive) {
-				nes.go(n);
-			}
-			if(s.alive) {
-				ses.go(s);
-			}
-			
-			//move missiles, update with expert systems
-			if(nmissile.alive) {
-				nmissile.move();
-				nmes.go(nmissile);
-				if(nmissile.boom) {
-					booms.add(new Boom(nmissile.x, nmissile.y, nmissile.explosionRadius));
-					nmissile.alive=false;
-				}
-			}
-			if(smissile.alive){
-				smissile.move();
-				smes.go(smissile);
-				if(smissile.boom) {
-					booms.add(new Boom(smissile.x, smissile.y, smissile.explosionRadius));
-					smissile.alive=false;
-				}
-			}
-			
-	    	//Did we request a fired missile?
-			if(n.fireMissile&&n.missiles>0){
-				n.missiles--;
-				nmissile.fire(n.x, n.y, n.angle, n.dx, n.dy);
-			}
-			if(s.fireMissile&&s.missiles>0){
-				s.missiles--;
-				smissile.fire(s.x, s.y, s.angle, s.dx, s.dy);
-			}
-			
-			//Detect booms colliding with ships, missiles
-			for(int x=0; x<booms.size(); x++) {
-				Boom b=booms.get(x);
-				if(Util.distance(b.x, b.y, n.x, n.y)<b.r) {
-					n.alive=false;
-				}
-				if(Util.distance(b.x, b.y, s.x, s.y)<b.r) {
-					s.alive=false;
-				}
-				if(Util.distance(b.x, b.y, nmissile.x, nmissile.y)<b.r) {
-					nmissile.alive=false;
-				}
-				if(Util.distance(b.x, b.y, smissile.x, smissile.y)<b.r) {
-					smissile.alive=false;
-				}
-			}
-			
-			//check for exit conditions, draw
-			if((ticks>2000)||SpaceSim.simulate&&((n.alive==false&&s.alive==false)||(n.alive==true&&s.alive==true&&
-					nmissile.alive==false&&smissile.alive==false&&n.missiles==0&&s.missiles==0))){
+			if(r==DRAW){
 				System.out.println("Draw");
 				System.exit(0);
 			}
-			//north victory
-			if(n.alive==true&&smissile.alive==false&&s.alive==false&&s.missiles==0){
+			else if(r==NORTH_WIN){
 				System.out.println("North Wins");
 				System.exit(0);
 			}
-			//south victory
-			if(s.alive==true&&nmissile.alive==false&&n.alive==false&&n.missiles==0){
+			else if(r==SOUTH_WIN){
 				System.out.println("South Wins");
 				System.exit(0);
 			}
-			
-	    	ticks++;
 		}
 	}
 	
@@ -277,22 +310,16 @@ public class SpaceSim extends JPanel {
 		//create simulator
 		SpaceSim s = new SpaceSim();
 
-		if(SpaceSim.simulate){
-		    //start simulator in simulation mode
-		    s.simulate();			
-		}
-		else {
-			//set up gui
-			JFrame frame = new JFrame("Space Combat Simulator");
-		    s.setBackground(new Color(0, 0, 0));
-		    frame.setSize(screen_width, screen_height);
-		    frame.setResizable(false);
-		    frame.setContentPane(s);
-		    frame.addWindowListener(s.e);
-		    frame.setVisible(true);
-		    
-		    //start simulator in real-time mode
-		    s.start();
-		}
+		//set up gui
+		JFrame frame = new JFrame("Space Combat Simulator");
+	    s.setBackground(new Color(0, 0, 0));
+	    frame.setSize(screen_width, screen_height);
+	    frame.setResizable(false);
+	    frame.setContentPane(s);
+	    frame.addWindowListener(s.e);
+	    frame.setVisible(true);
+	    
+	    //start simulator in real-time mode
+	    s.start();
 	}
 }

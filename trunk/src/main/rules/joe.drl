@@ -16,7 +16,7 @@ end
 rule "Close, enemy is offset"
 	no-loop
 	when
-		s:Ship(enemyMissile.alive==false, enemyShip.missiles>0, missiles>0, eval(Math.abs(enemyShip.angle-enemyShip.ea)>20))
+		s:Ship(enemyMissile.alive==false, enemyShip.missiles>0, missiles>0, eval(Math.abs(enemyShip.angle-enemyShip.ea)>SpaceSim.ENEMY_OFFSET))
 	then
 		s.angle=s.ea;
 		update(s);
@@ -25,7 +25,7 @@ end
 rule "Close, enemy is not offset"
 	no-loop
 	when
-		s:Ship(enemyMissile.alive==false, enemyShip.missiles>0, missiles>0, eval(Math.abs(enemyShip.angle-enemyShip.ea)<=20))
+		s:Ship(enemyMissile.alive==false, enemyShip.missiles>0, missiles>0, eval(Math.abs(enemyShip.angle-enemyShip.ea)<=SpaceSim.ENEMY_OFFSET))
 	then
 		s.angle=s.ea-25;
 		update(s);
@@ -51,7 +51,7 @@ end
 
 rule "You May Fire When Ready Grimley"
 	when
-		s:Ship(ed<310, fireMissile==false, missiles>0)
+		s:Ship(ed<SpaceSim.FIRE_DISTANCE, fireMissile==false, missiles>0)
 	then
 		s.fireMissile=true;
 		update(s);
@@ -59,7 +59,7 @@ end
 
 rule "Return fire"
 	when
-		s:Ship(enemyMissile.alive==true, ed<650, fireMissile==false, missiles>0)
+		s:Ship(enemyMissile.alive==true, ed<SpaceSim.RETURN_FIRE_DISTANCE, fireMissile==false, missiles>0)
 	then
 		s.fireMissile=true;
 		update(s);
@@ -68,7 +68,7 @@ end
 rule "Avoid Missiles when far"
 	no-loop
 	when
-		s:Ship(enemyMissile.alive==true, enemyMissile.ed>100)
+		s:Ship(enemyMissile.alive==true, enemyMissile.ed>SpaceSim.MISSILE_AVOID_THRESHOLD)
 	then
 		s.angle=s.ema+115;
 		update(s);
@@ -77,7 +77,7 @@ end
 rule "Avoid Missiles when close"
 	no-loop
 	when
-		s:Ship(enemyMissile.alive==true, enemyMissile.ed<=100, eval(Math.abs((s.enemyMissile.angle+115)-(180-enemyMissile.ea))>180))
+		s:Ship(enemyMissile.alive==true, enemyMissile.ed<=SpaceSim.MISSILE_AVOID_THRESHOLD, eval(Math.abs((s.enemyMissile.angle+115)-(180-enemyMissile.ea))>180))
 	then
 		s.angle=s.enemyMissile.angle+115;
 		update(s);
@@ -86,7 +86,7 @@ end
 rule "Avoid Missiles when close (part 2)"
 	no-loop
 	when
-		s:Ship(enemyMissile.alive==true, enemyMissile.ed<=100, eval(Math.abs((s.enemyMissile.angle+115)-(180-enemyMissile.ea))<=180))
+		s:Ship(enemyMissile.alive==true, enemyMissile.ed<=SpaceSim.MISSILE_AVOID_THRESHOLD, eval(Math.abs((s.enemyMissile.angle+115)-(180-enemyMissile.ea))<=180))
 	then
 		s.angle=s.enemyMissile.angle-115;
 		update(s);
