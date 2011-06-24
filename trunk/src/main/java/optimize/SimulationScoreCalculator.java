@@ -11,9 +11,9 @@ import spacesim.SpaceSim;
 public class SimulationScoreCalculator extends  AbstractScoreCalculator {
 	private static final long serialVersionUID = 1L;
 	public static HashMap<Integer, Integer> old_scores=new HashMap<Integer, Integer>();
-	private int score;	
-	
-    public int getScore() {
+	private int score, fire_distance=310, enemy_offset=20, return_fire_distance=650, missile_avoid_threshold=100;
+
+	public int getScore() {
         return score;
     }
 
@@ -25,6 +25,18 @@ public class SimulationScoreCalculator extends  AbstractScoreCalculator {
         return DefaultSimpleScore.valueOf(score);
     }
 
+    private void update(int newvalue) {
+    	if(Optimizer.MODE==Optimizer.VARY_FIRE_DISTANCE)
+    		fire_distance=newvalue;
+    	else if(Optimizer.MODE==Optimizer.VARY_ENEMY_OFFSET)
+    		enemy_offset=newvalue;
+    	else if(Optimizer.MODE==Optimizer.VARY_RETURN_FIRE_DISTANCE)
+    		return_fire_distance=newvalue;
+    	else if(Optimizer.MODE==Optimizer.VARY_MISSILE_AVOID_THRESHOLD)
+    		missile_avoid_threshold=newvalue;
+
+    }
+    
     public void simulate(Variable v) throws Exception {
     	System.out.println("Computing score for "+v.value);
     	if(v.value<0) {
@@ -38,7 +50,8 @@ public class SimulationScoreCalculator extends  AbstractScoreCalculator {
 	    	
 	    	for(int x=0; x<Optimizer.RUNS_PER_SCORE; x++){
 		    	SpaceSim s = new SpaceSim();
-		    	int r = s.simulate(v.value);
+		    	update(v.value);
+		    	int r = s.simulate(fire_distance, enemy_offset, return_fire_distance, missile_avoid_threshold);
 		    	
 		    	if(r==SpaceSim.DRAW){
 					score-=5;
