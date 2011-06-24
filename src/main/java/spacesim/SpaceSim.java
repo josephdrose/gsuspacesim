@@ -176,8 +176,11 @@ public class SpaceSim extends JPanel {
 	    t.schedule(new Paint(), 0, 33);
 	}
 	
-	public int simulate(int fire_distance) {
-		//TODO: Set fire distance, have rules pull it;
+	public int simulate(int fire_distance, int enemy_offset, int return_fire_distance, int missile_avoid_threshold) {
+		FIRE_DISTANCE=fire_distance;
+		ENEMY_OFFSET=enemy_offset;
+		RETURN_FIRE_DISTANCE=return_fire_distance;
+		MISSILE_AVOID_THRESHOLD=missile_avoid_threshold;
 		
 		int r = UNDECIDED;
 		while(r==UNDECIDED)

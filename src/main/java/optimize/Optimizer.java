@@ -8,6 +8,13 @@ public class Optimizer {
 	public static final int RUNS_PER_SCORE=3;
 	public static final int STEP=25;
 	
+	public static int VARY_FIRE_DISTANCE=0;
+	public static int VARY_ENEMY_OFFSET=1;
+	public static int VARY_RETURN_FIRE_DISTANCE=2;
+	public static int VARY_MISSILE_AVOID_THRESHOLD=3;
+	
+	public static int MODE=VARY_FIRE_DISTANCE;
+	
 	public static void main(String [] args) {
 		XmlSolverConfigurer configurer = new XmlSolverConfigurer(); 
 		configurer.configure("/optimize/config.xml"); 
