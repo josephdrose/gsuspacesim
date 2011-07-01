@@ -5,7 +5,7 @@ import java.util.Vector;
 
 public class Genetic {
 	private static int NUM_CHROMOSOMES = 100;
-	private static int FITNESS_THRESHOLD = 50;
+	private static int FITNESS_THRESHOLD = 100;
 	private static int MAX_RUNS=5;
 	public static final int RUNS_PER_SCORE=10;
 	private static float MUTATE = (float) .05;
