@@ -125,8 +125,8 @@ public class SpaceSim extends JPanel {
 		//load up the expert systems
 		nes = new ExpertSystem("joe.drl");
 		nmes = new ExpertSystem("joe_missile.drl");
-		ses = new ExpertSystem("darnell.drl");
-		smes = new ExpertSystem("darnell_missile.drl");
+		ses = new ExpertSystem("joe_genetic_final.drl");
+		smes = new ExpertSystem("joe_missile.drl");
 		
 		//opponents North and South		
 		Random g=new Random();

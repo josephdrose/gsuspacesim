@@ -1,0 +1,103 @@
+package spacesim
+
+import spacesim.Ship
+
+rule "Start Moving"
+	no-loop
+	when
+		s:Ship(forwardThrust==false, enemyShip!=null)
+	then 
+		s.forwardThrust=true;
+		//offset from the enemy ship; we don't want to take a missile head-on
+		s.angle=s.ea;
+		update(s);
+end
+
+rule "Close, enemy is offset"
+	no-loop
+	when
+		s:Ship(enemyMissile.alive==false, enemyShip.missiles>0, missiles>0, eval(Math.abs(enemyShip.angle-enemyShip.ea)>114))
+	then
+		s.angle=s.ea;
+		update(s);
+end
+
+rule "Close, enemy is not offset"
+	no-loop
+	when
+		s:Ship(enemyMissile.alive==false, enemyShip.missiles>0, missiles>0, eval(Math.abs(enemyShip.angle-enemyShip.ea)<=114))
+	then
+		s.angle=s.ea-25;
+		update(s);
+end
+
+rule "Missile Away, Run"
+	no-loop
+	when
+		s:Ship(enemyMissile.alive==false, enemyShip.alive==true, missiles==0)
+	then
+		s.angle=s.ea-90;
+		update(s);
+end
+
+rule "Close On Enemy With No Missiles"
+	no-loop
+	when
+		s:Ship(enemyMissile.alive==false, enemyShip.missiles==0, missiles>0)
+	then
+		s.angle=s.ea;
+		update(s);
+end
+
+rule "You May Fire When Ready Grimley"
+	when
+		s:Ship(ed<243, fireMissile==false, missiles>0)
+	then
+		s.fireMissile=true;
+		update(s);
+end
+
+rule "Return fire"
+	when
+		s:Ship(enemyMissile.alive==true, ed<52, fireMissile==false, missiles>0)
+	then
+		s.fireMissile=true;
+		update(s);
+end
+
+rule "Avoid Missiles when far"
+	no-loop
+	when
+		s:Ship(enemyMissile.alive==true, enemyMissile.ed>452)
+	then
+		s.angle=s.ema+115;
+		update(s);
+end
+
+rule "Avoid Missiles when close"
+	no-loop
+	when
+		s:Ship(enemyMissile.alive==true, enemyMissile.ed<=452, eval(Math.abs((s.enemyMissile.angle+115)-(180-enemyMissile.ea))>180))
+	then
+		s.angle=s.enemyMissile.angle+115;
+		update(s);
+end
+
+rule "Avoid Missiles when close (part 2)"
+	no-loop
+	when
+		s:Ship(enemyMissile.alive==true, enemyMissile.ed<=452, eval(Math.abs((s.enemyMissile.angle+115)-(180-enemyMissile.ea))<=180))
+	then
+		s.angle=s.enemyMissile.angle-115;
+		update(s);
+end
+
+rule "Brake For Victory"
+	no-loop
+	when
+		s:Ship(enemyMissile.alive==false, enemyShip.alive==false, 
+			eval(Math.abs(dx)>=0.01||Math.abs(dy)>=0.01))
+	then
+		s.angle=Util.angle(0, 0, s.dx, s.dy)-180;
+		update(s);
+end
