@@ -259,12 +259,10 @@ public class SpaceSim extends JPanel {
 		}
 		//north victory
 		if(n.alive==true&&smissile.alive==false&&s.alive==false&&s.missiles==0){
-			
 			return NORTH_WIN;
 		}
 		//south victory
 		if(s.alive==true&&nmissile.alive==false&&n.alive==false&&n.missiles==0){
-			System.out.println("South Wins");
 			return SOUTH_WIN;
 		}
 		

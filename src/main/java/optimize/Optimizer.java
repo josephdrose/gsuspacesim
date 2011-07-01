@@ -5,13 +5,13 @@ import org.drools.planner.core.Solver;
 import org.drools.planner.core.localsearch.DefaultLocalSearchSolver;
 
 public class Optimizer {
-	public static final int RUNS_PER_SCORE=3;
+	public static final int RUNS_PER_SCORE=10;
 	public static final int STEP=25;
 	
-	public static int VARY_FIRE_DISTANCE=0;
-	public static int VARY_ENEMY_OFFSET=1;
-	public static int VARY_RETURN_FIRE_DISTANCE=2;
-	public static int VARY_MISSILE_AVOID_THRESHOLD=3;
+	public static int VARY_FIRE_DISTANCE=0;           //25
+	public static int VARY_ENEMY_OFFSET=1;            //1
+	public static int VARY_RETURN_FIRE_DISTANCE=2;    //25
+	public static int VARY_MISSILE_AVOID_THRESHOLD=3; //10
 	
 	public static int MODE=VARY_FIRE_DISTANCE;
 	
